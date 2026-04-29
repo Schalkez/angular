@@ -1,0 +1,45 @@
+@import '../../../../../styles.scss';
+
+.todo-form {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.todo-input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid $border-color;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+
+  &:focus {
+    border-color: $primary-color;
+  }
+}
+
+.todo-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}

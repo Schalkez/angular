@@ -1,0 +1,42 @@
+@import '../../../../../styles.scss';
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+
+  &.completed {
+    background: #f9f9f9;
+
+    .todo-title {
+      text-decoration: line-through;
+      color: #999;
+    }
+  }
+
+  .todo-checkbox {
+    margin-right: 15px;
+    cursor: pointer;
+  }
+
+  .todo-title {
+    flex-grow: 1;
+    font-size: 16px;
+  }
+
+  .delete-btn {
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background: darken(#ff4d4f, 10%);
+    }
+  }
+}

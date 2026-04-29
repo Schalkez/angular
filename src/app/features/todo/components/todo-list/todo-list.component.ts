@@ -7,7 +7,7 @@ import { TodoItemComponent } from '../todo-item/todo-item.component';
   standalone: true,
   imports: [TodoItemComponent],
   templateUrl: './todo-list.component.html',
-  styleUrl: './todo-list.component.css',
+  styleUrl: './todo-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoListComponent {

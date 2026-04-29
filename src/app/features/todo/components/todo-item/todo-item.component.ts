@@ -7,7 +7,7 @@ import { Todo } from '../../models/todo.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './todo-item.component.html',
-  styleUrl: './todo-item.component.css',
+  styleUrl: './todo-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoItemComponent {
