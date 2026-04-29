@@ -1,0 +1,21 @@
+<div class="container">
+  <header class="header">
+    <h1>Angular Todo</h1>
+    <p class="subtitle">A simple todo list built with Angular 19, Signals, and Standalone Components</p>
+  </header>
+
+  <main>
+    <app-todo-input (addTodo)="addTodo($event)" />
+
+    <div class="stats">
+      <span>{{ activeCount().length }} active</span>
+      <span>{{ completedCount().length }} completed</span>
+    </div>
+
+    <app-todo-list
+      [todos]="todos()"
+      (toggle)="toggleTodo($event)"
+      (delete)="deleteTodo($event)"
+    />
+  </main>
+</div>

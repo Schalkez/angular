@@ -1,0 +1,12 @@
+<form (ngSubmit)="onSubmit()" class="todo-form">
+  <input
+    type="text"
+    [ngModel]="title()"
+    (ngModelChange)="title.set($event)"
+    name="title"
+    placeholder="What needs to be done?"
+    class="todo-input"
+    autocomplete="off"
+  />
+  <button type="submit" class="todo-button" [disabled]="!title().trim()">Add</button>
+</form>

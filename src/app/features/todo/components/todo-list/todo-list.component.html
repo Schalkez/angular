@@ -1,0 +1,13 @@
+<div class="todo-list">
+  @for (todo of todos; track todo.id) {
+    <app-todo-item
+      [todo]="todo"
+      (toggle)="toggle.emit($event)"
+      (delete)="delete.emit($event)"
+    />
+  } @empty {
+    <div class="empty-state">
+      <p>No tasks yet. Add one above!</p>
+    </div>
+  }
+</div>
