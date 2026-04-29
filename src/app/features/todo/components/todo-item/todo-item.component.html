@@ -2,11 +2,11 @@
   <input
     type="checkbox"
     [checked]="todo.completed"
-    (change)="toggle.emit(todo.id)"
+    (change)="toggleTodo.emit(todo.id)"
     class="todo-checkbox"
   />
   <span class="todo-title">{{ todo.title }}</span>
-  <button (click)="delete.emit(todo.id)" class="delete-btn" aria-label="Delete todo">
+  <button (click)="deleteTodo.emit(todo.id)" class="delete-btn" aria-label="Delete todo">
     &times;
   </button>
 </div>
