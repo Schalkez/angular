@@ -12,6 +12,6 @@ import { Todo } from '../../models/todo.model';
 })
 export class TodoItemComponent {
   @Input({ required: true }) todo!: Todo;
-  @Output() toggle = new EventEmitter<string>();
-  @Output() delete = new EventEmitter<string>();
+  @Output() toggleTodo = new EventEmitter<string>();
+  @Output() deleteTodo = new EventEmitter<string>();
 }

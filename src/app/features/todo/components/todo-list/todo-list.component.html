@@ -2,8 +2,8 @@
   @for (todo of todos; track todo.id) {
     <app-todo-item
       [todo]="todo"
-      (toggle)="toggle.emit($event)"
-      (delete)="delete.emit($event)"
+      (toggleTodo)="toggleTodo.emit($event)"
+      (deleteTodo)="deleteTodo.emit($event)"
     />
   } @empty {
     <div class="empty-state">

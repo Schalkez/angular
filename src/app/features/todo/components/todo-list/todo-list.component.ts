@@ -12,6 +12,6 @@ import { TodoItemComponent } from '../todo-item/todo-item.component';
 })
 export class TodoListComponent {
   @Input({ required: true }) todos!: Todo[];
-  @Output() toggle = new EventEmitter<string>();
-  @Output() delete = new EventEmitter<string>();
+  @Output() toggleTodo = new EventEmitter<string>();
+  @Output() deleteTodo = new EventEmitter<string>();
 }
