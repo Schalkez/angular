@@ -2,13 +2,15 @@ import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { TodoService } from '../../services/todo.service';
 import { TodoInputComponent } from '../../components/todo-input/todo-input.component';
 import { TodoListComponent } from '../../components/todo-list/todo-list.component';
+import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner.component';
+import { ErrorMessageComponent } from '../../../../shared/components/error-message.component';
 
 @Component({
   selector: 'app-todo-page',
   standalone: true,
-  imports: [TodoInputComponent, TodoListComponent],
+  imports: [TodoInputComponent, TodoListComponent, LoadingSpinnerComponent, ErrorMessageComponent],
   templateUrl: './todo-page.component.html',
-  styleUrl: './todo-page.component.css',
+  styleUrl: './todo-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoPageComponent {
@@ -16,6 +18,8 @@ export class TodoPageComponent {
 
   // Expose signals from service
   todos = this.todoService.todos;
+  isLoading = this.todoService.isLoading;
+  error = this.todoService.error;
   activeCount = this.todoService.activeTodos;
   completedCount = this.todoService.completedTodos;
 

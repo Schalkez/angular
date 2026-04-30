@@ -1,21 +1,32 @@
-<div class="container">
+<div class="container todo-app">
   <header class="header">
     <h1>Angular Todo</h1>
     <p class="subtitle">A simple todo list built with Angular 19, Signals, and Standalone Components</p>
   </header>
 
   <main>
+    <app-error-message [message]="error()"></app-error-message>
+
     <app-todo-input (addTodo)="addTodo($event)" />
 
-    <div class="stats">
-      <span>{{ activeCount().length }} active</span>
-      <span>{{ completedCount().length }} completed</span>
-    </div>
+    @if (todos().length > 0) {
+      <div class="stats">
+        <span>{{ activeCount().length }} active</span>
+        <span>{{ completedCount().length }} completed</span>
+        @if (isLoading()) {
+          <span>Updating...</span>
+        }
+      </div>
+    }
 
-    <app-todo-list
-      [todos]="todos()"
-      (toggleTodo)="toggleTodo($event)"
-      (deleteTodo)="deleteTodo($event)"
-    />
+    @if (isLoading() && todos().length === 0) {
+      <app-loading-spinner></app-loading-spinner>
+    } @else {
+      <app-todo-list
+        [todos]="todos()"
+        (toggleTodo)="toggleTodo($event)"
+        (deleteTodo)="deleteTodo($event)"
+      />
+    }
   </main>
 </div>

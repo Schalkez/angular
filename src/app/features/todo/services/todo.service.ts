@@ -1,18 +1,24 @@
-import { Injectable, signal, computed, effect, inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { Todo } from '../models/todo.model';
+import { TodoApiService } from '../../../core/api/todo-api.service';
+import { catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-  private platformId = inject(PLATFORM_ID);
+  private apiService = inject(TodoApiService);
 
-  // State
+  // State Signals
   private todosSignal = signal<Todo[]>([]);
+  private isLoadingSignal = signal<boolean>(false);
+  private errorSignal = signal<string | null>(null);
 
   // Selectors
   readonly todos = this.todosSignal.asReadonly();
+  readonly isLoading = this.isLoadingSignal.asReadonly();
+  readonly error = this.errorSignal.asReadonly();
 
   readonly completedTodos = computed(() =>
     this.todosSignal().filter(todo => todo.completed)
@@ -23,42 +29,75 @@ export class TodoService {
   );
 
   constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      const savedTodos = localStorage.getItem('todos');
-      if (savedTodos) {
-        try {
-          this.todosSignal.set(JSON.parse(savedTodos));
-        } catch (e) {
-          console.error('Failed to parse todos from local storage', e);
-        }
-      }
+    this.loadTodos();
+  }
 
-      effect(() => {
-        const todos = this.todosSignal();
-        localStorage.setItem('todos', JSON.stringify(todos));
-      });
-    }
+  loadTodos(): void {
+    this.isLoadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.apiService.getTodos().pipe(
+      catchError(err => {
+        this.errorSignal.set('Failed to load todos');
+        return of([]);
+      }),
+      finalize(() => this.isLoadingSignal.set(false))
+    ).subscribe(todos => {
+      this.todosSignal.set(todos);
+    });
   }
 
   addTodo(title: string): void {
-    const newTodo: Todo = {
-      id: Math.random().toString(36).substring(2, 9),
-      title,
-      completed: false,
-      createdAt: Date.now()
-    };
-    this.todosSignal.update(todos => [...todos, newTodo]);
+    this.isLoadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.apiService.addTodo(title).pipe(
+      catchError(err => {
+        this.errorSignal.set('Failed to add todo');
+        return of(null);
+      }),
+      finalize(() => this.isLoadingSignal.set(false))
+    ).subscribe(newTodo => {
+      if (newTodo) {
+        this.todosSignal.update(todos => [...todos, newTodo]);
+      }
+    });
   }
 
   toggleTodo(id: string): void {
-    this.todosSignal.update(todos =>
-      todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+    // Optimistic UI update or full loading block
+    this.isLoadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.apiService.toggleTodo(id).pipe(
+      catchError(err => {
+        this.errorSignal.set('Failed to toggle todo');
+        return of(null);
+      }),
+      finalize(() => this.isLoadingSignal.set(false))
+    ).subscribe(updatedTodo => {
+      if (updatedTodo) {
+        this.todosSignal.update(todos =>
+          todos.map(todo => (todo.id === id ? updatedTodo : todo))
+        );
+      }
+    });
   }
 
   deleteTodo(id: string): void {
-    this.todosSignal.update(todos => todos.filter(todo => todo.id !== id));
+    this.isLoadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.apiService.deleteTodo(id).pipe(
+      catchError(err => {
+        this.errorSignal.set('Failed to delete todo');
+        return of(false); // return false on error
+      }),
+      finalize(() => this.isLoadingSignal.set(false))
+    ).subscribe(success => {
+      if (success !== false) {
+        this.todosSignal.update(todos => todos.filter(todo => todo.id !== id));
+      }
+    });
   }
 }
